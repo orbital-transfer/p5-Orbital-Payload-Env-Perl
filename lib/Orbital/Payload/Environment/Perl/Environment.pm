@@ -1,13 +1,13 @@
 use Modern::Perl;
-package Orbital::Launch::Environment::Perl;
+package Orbital::Payload::Environment::Perl::Environment;
 # ABSTRACT: Perl interpreter
 
 use Mu;
 use Orbital::Transfer::Common::Setup;
 use Orbital::Transfer::Common::Types qw(AbsFile ArrayRef Path);
-use aliased 'Orbital::Launch::Runnable';
+use aliased 'Orbital::Transfer::Runnable';
 use Config;
-use Orbital::Launch::EnvironmentVariables;
+use Orbital::Transfer::EnvironmentVariables;
 use Object::Util magic => 0;
 use File::Which;
 
@@ -50,7 +50,7 @@ lazy vendorbin_path => method() {
 };
 
 lazy environment => method() {
-	Orbital::Launch::EnvironmentVariables->new(
+	Orbital::Transfer::EnvironmentVariables->new(
 		$self->has_parent_environment
 		? ( parent => $self->parent_environment )
 		: ()
@@ -67,7 +67,7 @@ lazy environment => method() {
 method command( @arguments ) {
 	Runnable->new(
 		command => [ "" . $self->perl, @arguments, ],
-		environment => Orbital::Launch::EnvironmentVariables->new(
+		environment => Orbital::Transfer::EnvironmentVariables->new(
 			parent => $self->environment,
 		),
 	)
@@ -98,6 +98,6 @@ method which_script( $script ) {
 	$script_path or die "Could not find $script in $ENV{PATH}";
 }
 
-with qw(Orbital::Launch::Role::HasRunner);
+with qw(Orbital::Transfer::Role::HasRunner);
 
 1;

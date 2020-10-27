@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Launch::Repo::Role::CPAN;
+package Orbital::Payload::Environment::Perl::Repo::Role::CPAN;
 # ABSTRACT: A role for running CPAN clients
 
 use Mu::Role;

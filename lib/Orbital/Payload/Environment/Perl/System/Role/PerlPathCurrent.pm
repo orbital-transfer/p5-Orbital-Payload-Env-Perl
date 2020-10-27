@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Launch::System::Role::PerlPathCurrent;
+package Orbital::Payload::Environment::Perl::System::Role::PerlPathCurrent;
 # ABSTRACT: Role to use current running Perl as Perl path
 
 use Mu::Role;
