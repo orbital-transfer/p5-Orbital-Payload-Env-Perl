@@ -173,7 +173,7 @@ method setup_build() {
 	$self->_install_dzil_authordeps;
 	$self->_install_dzil_spell_check_if_needed;
 
-	$self->_install_dzil_listdeps;
+	#$self->_install_dzil_listdeps;
 	$self->_install_dzil_build;
 }
 
