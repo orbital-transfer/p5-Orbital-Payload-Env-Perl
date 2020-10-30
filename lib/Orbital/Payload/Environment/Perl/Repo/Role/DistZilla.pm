@@ -10,6 +10,7 @@ use File::Temp qw(tempdir);
 use File::chdir;
 use Module::Reader;
 use List::AllUtils qw(first);
+use Sub::Retry;
 
 use Orbital::Transfer::Common::Setup;
 
@@ -130,10 +131,12 @@ method _dzil_build_in_dir() {
 
 method _install_dzil_build() {
 	$self->_dzil_build_in_dir;
-	$self->_install( $self->dzil_build_dir,
-		quiet => 1,
-		installdeps => 1,
-	);
+	retry 3, 0, sub {
+		$self->_install( $self->dzil_build_dir,
+			quiet => 1,
+			installdeps => 1,
+		);
+	};
 }
 
 method _dzil_has_plugin_test_podspelling() {
