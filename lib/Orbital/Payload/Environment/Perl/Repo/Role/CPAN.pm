@@ -8,6 +8,7 @@ use Module::Load;
 use File::chdir;
 use File::HomeDir;
 use Path::Tiny;
+use URI::file;
 
 use Orbital::Transfer::Common::Setup;
 
@@ -100,7 +101,7 @@ method _install( $directory, :$quiet = 0, :$installdeps = 0 ) {
 			qw(--notest),
 			qw(--no-man-pages),
 			$self->_install_perl_deps_cpanm_dir_arg,
-			File::Spec->abs2rel( $directory ),
+			URI::file->new( File::Spec->abs2rel( $directory ) ),
 		],
 	);
 }
@@ -144,7 +145,7 @@ method _run_test( $directory ) {
 			qw(--verbose),
 			qw(--test-only),
 			qw(--test-args), 'TEST_VERBOSE=1',
-			File::Spec->abs2rel( $directory ),
+			URI::file->new( File::Spec->abs2rel( $directory ) ),
 	]);
 
 	if( $self->config->has_orbital_coverage ) {
