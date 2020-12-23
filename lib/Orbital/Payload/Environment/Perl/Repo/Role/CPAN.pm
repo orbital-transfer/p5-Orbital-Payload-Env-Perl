@@ -89,13 +89,8 @@ method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 	};
 }
 
-method _cpanm_directory_argument( $directory ) {
-	$^O eq 'MSWin32'
-	? '//?/' . File::Spec->rel2abs( $directory )
-	: File::Spec->abs2rel( $directory )
-}
-
 method _install( $directory, :$quiet = 0, :$installdeps = 0 ) {
+	local $CWD = $directory;
 	$self->cpanm( perl => $self->platform->build_perl,
 		command_cb => sub {
 			shift->environment->add_environment( $self->environment );
@@ -106,7 +101,7 @@ method _install( $directory, :$quiet = 0, :$installdeps = 0 ) {
 			qw(--notest),
 			qw(--no-man-pages),
 			$self->_install_perl_deps_cpanm_dir_arg,
-			$self->_cpanm_directory_argument( $directory ),
+			'.',
 		],
 	);
 }
@@ -140,6 +135,8 @@ method _run_test( $directory ) {
 		}
 	}
 
+	{
+	local $CWD = $directory;
 	$self->cpanm( perl => $self->platform->build_perl,
 		command_cb => sub {
 			shift->environment->add_environment( $test_env );
@@ -150,8 +147,9 @@ method _run_test( $directory ) {
 			qw(--verbose),
 			qw(--test-only),
 			qw(--test-args), 'TEST_VERBOSE=1',
-			$self->_cpanm_directory_argument( $directory ),
+			'.',
 	]);
+	}
 
 	if( $self->config->has_orbital_coverage ) {
 		local $CWD = $directory;
