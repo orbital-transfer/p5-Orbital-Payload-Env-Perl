@@ -167,4 +167,21 @@ method _run_test( $directory ) {
 	}
 }
 
+method uninstall() {
+	try {
+		$self->platform->build_perl->which_script( 'pm-uninstall' )
+	} catch {
+		$self->cpanm( perl => $self->platform->build_perl, arguments => [
+			qw(--no-man-pages),
+			$self->_install_perl_deps_cpanm_dir_arg,
+			qw(--notest),
+			qw(App::pmuninstall)
+		]);
+	};
+
+	$self->platform->build_perl->script(
+		qw(pm-uninstall -vfn), $self->dist_name
+	);
+}
+
 1;
