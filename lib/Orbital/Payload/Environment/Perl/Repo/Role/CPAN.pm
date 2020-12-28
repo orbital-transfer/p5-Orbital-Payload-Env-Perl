@@ -11,6 +11,8 @@ use Path::Tiny;
 
 use Orbital::Transfer::Common::Setup;
 
+requires 'dist_name';
+
 method _install_perl_deps_cpanm_dir_arg() {
 	my $global = $self->config->cpan_global_install;
 
