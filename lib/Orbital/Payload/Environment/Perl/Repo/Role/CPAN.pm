@@ -16,7 +16,7 @@ requires 'dist_name';
 method _install_perl_deps_cpanm_dir_arg() {
 	my $global = $self->config->cpan_global_install;
 
-	@{ $global ? [] : [ qw(-L), $self->config->lib_dir ] };
+	@{ $global ? [] : [ qw(-L), "@{[ $self->config->lib_dir ]}" ] };
 }
 
 method install_perl_build( :$dists = [], :$verbose = 0 ) {
