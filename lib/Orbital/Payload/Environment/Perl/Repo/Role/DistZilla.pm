@@ -108,7 +108,7 @@ method _install_dzil_listdeps() {
 lazy dzil_name => method() {
 	# TODO fix this: an explicit name is not always there
 	my $name_line = first { /^name\s*=/ }
-		$self->directory->child('dist.ini')->lines_utf8;
+		$self->directory->child('dist.ini')->lines_utf8({ chomp => 1 });
 
 	my ($name) = $name_line =~ /^name\s*=\s*(\S*)$/;
 
