@@ -115,9 +115,9 @@ lazy dzil_name => method() {
 	$name;
 };
 
-method dist_name() {
+lazy dist_name => method() {
 	return $self->dzil_name;
-}
+};
 
 lazy dzil_build_dir => method() {
 	#File::Spec->catfile( $self->directory, qq(../_orbital/build-dir) );
