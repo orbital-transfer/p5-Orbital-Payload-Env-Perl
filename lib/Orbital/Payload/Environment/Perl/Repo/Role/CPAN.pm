@@ -185,7 +185,7 @@ method uninstall() {
 		# TODO this happens to be the same syntax as cpanm
 		$self->_install_perl_deps_cpanm_dir_arg,
 
-		$self->dist_name,
+		( $self->dist_name =~ s/-/::/gr ),
 	);
 }
 
