@@ -31,6 +31,11 @@ if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
 		no strict "refs"; ## no critic: 'RequireUseStrict'
 		*{"${targ}::WriteMakefile"} = sub {
 			my %args = @_;
+
+			if( $args{LIBS} && ref $args{LIBS} eq 'ARRAY' ) {
+				$args{LIBS} = join " ", @{ $args{LIBS} };
+			}
+
 			# Only apply :nosearch after lib linker directory
 			# for entire mingw64 system. This way XS modules
 			# that depend on other XS modules can compile
@@ -38,12 +43,11 @@ if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
 			#
 			# The pattern needs to be case-insensitive because
 			# Windows is case-insensitive.
-			chomp(my $lib_path = `cygpath -m /mingw64/lib`);
-			if( $args{LIBS} && ref $args{LIBS} eq 'ARRAY' ) {
-				$args{LIBS} = join " ", @{ $args{LIBS} };
+			for my $path ( '/mingw64/lib', '/mingw64/bin/../lib' ) {
+				chomp(my $lib_path = `cygpath -m $path`);
+				$args{LIBS} = '' unless $args{LIBS};
+				$args{LIBS} =~ s,^(.*?)(\Q-L$lib_path\E\s),$1 :nosearch $2,i;
 			}
-			$args{LIBS} = '' unless $args{LIBS};
-			$args{LIBS} =~ s,^(.*?)(\Q-L$lib_path\E\s),$1 :nosearch $2,i;
 
 			# Special case for expat (XML::Parser::Expat) because
 			# it does not use either of
