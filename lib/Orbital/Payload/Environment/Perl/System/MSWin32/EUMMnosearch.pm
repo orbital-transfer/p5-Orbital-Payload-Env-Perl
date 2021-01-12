@@ -43,9 +43,19 @@ if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
 			#
 			# The pattern needs to be case-insensitive because
 			# Windows is case-insensitive.
-			for my $path ( '/mingw64/lib', '/mingw64/bin/../lib' ) {
-				chomp(my $lib_path = `cygpath -m $path`);
-				$args{LIBS} = '' unless $args{LIBS};
+			my $mingw64_lib_unix_path = '/mingw64/lib';
+
+			$args{LIBS} = '' unless $args{LIBS};
+			my @L_paths = $args{LIBS} =~ m/-L(\S+)/g;
+			my @paths_to_replace = grep {
+				my $path = $_;
+				chomp(my $unix_path = `cygpath -u $path`);
+				# look for match in case $path is specified as
+				# relative directory
+				$unix_path eq $mingw64_lib_unix_path;
+			} @L_paths;
+
+			for my $lib_path (@paths_to_replace) {
 				$args{LIBS} =~ s,^(.*?)(\Q-L$lib_path\E\s),$1 :nosearch $2,i;
 			}
 
