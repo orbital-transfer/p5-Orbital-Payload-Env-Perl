@@ -9,7 +9,7 @@ use YAML;
 use File::chdir;
 use List::AllUtils qw(first);
 
-method dist_name() {
+lazy dist_name => method() {
 	my $makefile_pl_path = $self->directory->child('Makefile.PL');
 	my $meta_yml_path = $self->directory->child('MYMETA.yml');
 
@@ -30,7 +30,7 @@ method dist_name() {
 	my (undef, $name) = $name_line =~ /\bNAME\s*=>\s*(['"])(\S*)\1/;
 
 	return $name;
-}
+};
 
 method _run_makefile_pl() {
 	local $CWD = $self->directory;
@@ -47,18 +47,20 @@ method setup_build() {
 	try {
 		$self->_run_makefile_pl;
 	} catch {
-		# configure failed, try installing deps first from CPAN?
-		$self->cpanm( perl => $self->platform->build_perl,
-			command_cb => sub {
-				shift->environment->add_environment( $self->environment );
-			},
-			arguments => [
-				qw(--installdeps),
-				qw(--notest),
-				qw(--no-man-pages),
-				$self->dist_name,
-			],
-		);
+		try {
+			# configure failed, try installing deps first from CPAN?
+			$self->cpanm( perl => $self->platform->build_perl,
+				command_cb => sub {
+					shift->environment->add_environment( $self->environment );
+				},
+				arguments => [
+					qw(--installdeps),
+					qw(--notest),
+					qw(--no-man-pages),
+					$self->dist_name,
+				],
+			);
+		} catch {};
 	};
 }
 
