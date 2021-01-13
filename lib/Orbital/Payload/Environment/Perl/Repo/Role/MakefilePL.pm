@@ -13,8 +13,10 @@ method dist_name() {
 
 	if ( ! $meta_yml_path->is_file ){
 		local $CWD = $self->directory;
-		$self->platform->build_perl->command(
-			qw(Makefile.PL)
+		$self->runner->system(
+			$self->platform->build_perl->command(
+				qw(Makefile.PL)
+			)
 		);
 	}
 
