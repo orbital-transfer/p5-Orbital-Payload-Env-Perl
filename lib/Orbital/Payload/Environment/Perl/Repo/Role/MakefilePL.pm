@@ -46,6 +46,7 @@ method setup_build() {
 	$self->install_perl_deps(qw(ExtUtils::MakeMaker));
 	try {
 		$self->_run_makefile_pl;
+		die "Makefile.PL failed" unless $self->directory->child('MYMETA.yml')->is_file;
 	} catch {
 		try {
 			# configure failed, try installing deps first from CPAN?
