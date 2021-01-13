@@ -14,12 +14,9 @@ method dist_name() {
 	my $meta_yml_path = $self->directory->child('MYMETA.yml');
 
 	if ( ! $meta_yml_path->is_file ){
-		local $CWD = $self->directory;
-		$self->runner->system(
-			$self->platform->build_perl->command(
-				qw(./Makefile.PL)
-			)
-		);
+		try {
+			$self->_run_makefile_pl;
+		} catch {};
 	}
 
 	if( $meta_yml_path->is_file ) {
@@ -35,9 +32,34 @@ method dist_name() {
 	return $name;
 }
 
+method _run_makefile_pl() {
+	local $CWD = $self->directory;
+	$self->runner->system(
+		$self->platform->build_perl->command(
+			qw(./Makefile.PL)
+		)
+	);
+}
+
 method setup_build() {
 	# build-time dependency
 	$self->install_perl_deps(qw(ExtUtils::MakeMaker));
+	try {
+		$self->_run_makefile_pl;
+	} catch {
+		# configure failed, try installing deps first from CPAN?
+		$self->cpanm( perl => $self->platform->build_perl,
+			command_cb => sub {
+				shift->environment->add_environment( $self->environment );
+			},
+			arguments => [
+				qw(--installdeps),
+				qw(--notest),
+				qw(--no-man-pages),
+				$self->dist_name,
+			],
+		);
+	};
 }
 
 method install() {
