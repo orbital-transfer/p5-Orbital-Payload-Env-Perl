@@ -15,7 +15,7 @@ method dist_name() {
 		local $CWD = $self->directory;
 		$self->runner->system(
 			$self->platform->build_perl->command(
-				qw(Makefile.PL)
+				qw(./Makefile.PL)
 			)
 		);
 	}
