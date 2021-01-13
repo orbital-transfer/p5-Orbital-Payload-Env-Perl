@@ -7,8 +7,10 @@ use Mu::Role;
 use Orbital::Transfer::Common::Setup;
 use YAML;
 use File::chdir;
+use List::AllUtils qw(first);
 
 method dist_name() {
+	my $makefile_pl_path = $self->directory->child('Makefile.PL');
 	my $meta_yml_path = $self->directory->child('MYMETA.yml');
 
 	if ( ! $meta_yml_path->is_file ){
@@ -20,9 +22,17 @@ method dist_name() {
 		);
 	}
 
-	my $meta = YAML::LoadFile($meta_yml_path);
+	if( $meta_yml_path->is_file ) {
+		my $meta = YAML::LoadFile($meta_yml_path);
+		return $meta->{name};
+	}
 
-	return $meta->{name};
+	# A hacky approach for dists that have configure deps
+	my $name_line = first { /\bNAME\s*=>\s*/ }
+		$makefile_pl_path->lines_utf8({ chomp => 1 });
+	my (undef, $name) = $name_line =~ /\bNAME\s*=>\s*(['"])(\S*)\1/;
+
+	return $name;
 }
 
 method setup_build() {
