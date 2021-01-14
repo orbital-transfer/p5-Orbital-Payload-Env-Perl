@@ -49,7 +49,10 @@ method setup_build() {
 		die "Makefile.PL failed" unless $self->directory->child('MYMETA.yml')->is_file;
 	} catch {
 		try {
-			# configure failed, try installing deps first from CPAN?
+			# Configure failed, try installing deps first from CPAN?
+			#
+			# An even more complicated way of doing things is to
+			# hook into @INC and check for packages being eval'd.
 			$self->cpanm( perl => $self->platform->build_perl,
 				command_cb => sub {
 					shift->environment->add_environment( $self->environment );
@@ -58,6 +61,7 @@ method setup_build() {
 					qw(--installdeps),
 					qw(--notest),
 					qw(--no-man-pages),
+					$self->_install_perl_deps_cpanm_dir_arg,
 					$self->dist_name,
 				],
 			);
