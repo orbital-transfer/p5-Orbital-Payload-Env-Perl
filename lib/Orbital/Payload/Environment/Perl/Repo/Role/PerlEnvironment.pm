@@ -5,7 +5,7 @@ package Orbital::Payload::Environment::Perl::Repo::Role::PerlEnvironment;
 use Mu::Role;
 
 use Orbital::Transfer::Common::Setup;
-use Orbital::Transfer::System::Debian::Meson;
+use Orbital::Payload::System::System::Debian::Meson;
 use Orbital::Transfer::EnvironmentVariables;
 
 lazy environment => method() {
@@ -16,7 +16,7 @@ lazy environment => method() {
 
 	my @packages = @{ $self->debian_get_packages };
 	if( grep { $_ eq 'meson' } @packages ) {
-		my $meson = Orbital::Transfer::System::Debian::Meson->new(
+		my $meson = Orbital::Payload::System::System::Debian::Meson->new(
 			runner => $self->runner,
 			platform => $self->platform,
 		);
