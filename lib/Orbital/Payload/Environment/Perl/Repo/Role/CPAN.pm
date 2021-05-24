@@ -13,6 +13,12 @@ use Orbital::Transfer::Common::Setup;
 
 requires 'dist_name';
 
+method _install_perl_deps_cpm_dir_arg() {
+	my $global = $self->config->cpan_global_install;
+
+	@{ $global ? [ qw(-g) ] : [ qw(-L), $self->config->lib_dir ] };
+}
+
 method _install_perl_deps_cpanm_dir_arg() {
 	my $global = $self->config->cpan_global_install;
 
@@ -65,7 +71,7 @@ method install_perl_deps( @dists ) {
 	]);
 }
 
-lazy cpanm_latest_build_log => method() {
+lazy homedir => method() {
 	my $homedir = $ENV{HOME}
 		|| File::HomeDir->my_home
 		|| join('', @ENV{qw(HOMEDRIVE HOMEPATH)}); # Win32
@@ -75,8 +81,29 @@ lazy cpanm_latest_build_log => method() {
 		$homedir = Win32::GetShortPathName($homedir);
 	}
 
-	return "$homedir/.cpanm/build.log";
+	$homedir;
 };
+
+lazy cpm_latest_build_log => method() {
+	return "@{[ $self->homedir ]}/.perl-cpm/build.log";
+};
+
+lazy cpanm_latest_build_log => method() {
+	return "@{[ $self->homedir ]}/.cpanm/build.log";
+};
+
+method cpm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
+	try {
+		my $command = $perl->script_command( qw(cpm), @$arguments );
+		$command_cb->( $command );
+		$self->runner->system( $command );
+	} catch {
+		say STDERR "cpm failed. Dumping build.log.\n";
+		say STDERR path( $self->cpm_latest_build_log )->slurp_utf8;
+		say STDERR "End of build.log.\n";
+		die $_;
+	};
+}
 
 method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 	try {
@@ -92,6 +119,31 @@ method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 }
 
 method _install( $directory, :$quiet = 0, :$installdeps = 0 ) {
+	try {
+		$self->_install_cpm( $directory, quiet => $quiet, installdeps => $installdeps );
+	} catch {};
+	$self->_install_cpanm( $directory, quiet => $quiet, installdeps => $installdeps );
+}
+
+method _install_cpm( $directory, :$quiet = 0, :$installdeps = 0 ) {
+	local $CWD = $directory;
+	# NOTE does not handle installdeps
+	$self->cpm( perl => $self->platform->build_perl,
+		command_cb => sub {
+			shift->environment->add_environment( $self->environment );
+		},
+		arguments => [
+			qw(install),
+			( $quiet ? qw() : qw(-v) ),
+			# default is no test
+			# default is no man pages
+			$self->_install_perl_deps_cpm_dir_arg,
+			'.',
+		],
+	);
+}
+
+method _install_cpanm( $directory, :$quiet = 0, :$installdeps = 0 ) {
 	local $CWD = $directory;
 	$self->cpanm( perl => $self->platform->build_perl,
 		command_cb => sub {
