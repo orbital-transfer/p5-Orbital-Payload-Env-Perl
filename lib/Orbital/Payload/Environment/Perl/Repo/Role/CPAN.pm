@@ -71,7 +71,7 @@ method install_perl_deps( @dists ) {
 	]);
 }
 
-lazy homedir => method() {
+lazy user_homedir => method() {
 	my $homedir = $ENV{HOME}
 		|| File::HomeDir->my_home
 		|| join('', @ENV{qw(HOMEDRIVE HOMEPATH)}); # Win32
@@ -84,16 +84,44 @@ lazy homedir => method() {
 	$homedir;
 };
 
+lazy orbital_home_dir => method() {
+	if( $^O eq 'MSWin32' ) {
+		# Make CPAN client working directory short so that certain
+		# installs on Windows, such as `Alien::*` packages with deep
+		# directory trees, do not truncate due to exceeding
+		# `MAX_PATH = 260`.
+		my $path = 'C:\\tmp';
+		path($path)->mkpath;
+		return $path;
+	}
+
+	return $self->user_homedir;
+};
+
+lazy _default_cpm_home_dir => method() { return "@{[ $self->user_homedir ]}/.perl-cpm"; };
+lazy cpm_home_dir => method() {
+	return "@{[ $self->orbital_home_dir ]}/.perl-cpm";
+};
+lazy _default_cpanm_home_dir => method() { return "@{[ $self->user_homedir ]}/.cpanm"; };
+lazy cpanm_home_dir => method() {
+	return "@{[ $self->orbital_home_dir ]}/.cpanm";
+};
+
 lazy cpm_latest_build_log => method() {
-	return "@{[ $self->homedir ]}/.perl-cpm/build.log";
+	return "@{[ $self->cpm_home_dir ]}/build.log";
 };
 
 lazy cpanm_latest_build_log => method() {
-	return "@{[ $self->homedir ]}/.cpanm/build.log";
+	return "@{[ $self->cpanm_home_dir ]}/build.log";
 };
 
 method cpm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 	try {
+		if( $arguments->[0] eq 'install'
+			&& $self->cpm_home_dir ne $self->_default_cpm_home_dir ) {
+			shift @$arguments;
+			unshift @$arguments, ( qw(install --home), $self->cpm_home_dir );
+		}
 		my $command = $perl->script_command( qw(cpm), @$arguments );
 		$command_cb->( $command );
 		$self->runner->system( $command );
@@ -109,6 +137,11 @@ method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 	try {
 		my $command = $perl->script_command( qw(cpanm), @$arguments );
 		$command_cb->( $command );
+		if( $self->cpanm_home_dir ne $self->_default_cpanm_home_dir ) {
+			$command->environment->set_string(
+				'PERL_CPANM_HOME', $self->cpanm_home_dir
+			);
+		}
 		$self->runner->system( $command );
 	} catch {
 		say STDERR "cpanm failed. Dumping build.log.\n";
