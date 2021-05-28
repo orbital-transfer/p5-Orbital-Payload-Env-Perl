@@ -3,9 +3,11 @@ use warnings;
 package Orbital::Payload::Environment::Perl::System::MSWin32::EUMMnosearch;
 # ABSTRACT: Hack ExtUtils::MakeMaker library searching on MSWin32
 
-package main;
+package # hide from PAUSE
+	main;
 # only run when we call the Makefile.PL script
 if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
+	$0 = "./Makefile.PL"; # normalise for no '.' in @INC
 	require ExtUtils::MakeMaker;
 	require ExtUtils::Liblist::Kid;
 
