@@ -97,6 +97,36 @@ if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
 		return;
 	};
 
+
+	if( $makefile_contents =~ /\QExtUtils::Depends\E/ ) {
+	# Add back hack that was in `ExtUtils::Depends@0.8000` which is needed
+	# for MINGW builds where one XS module depends on another XS module.
+	#
+	# See <https://rt.cpan.org/Ticket/Display.html?id=45224#txn-2006401>,
+	# <https://gitlab.gnome.org/GNOME/perl-extutils-depends/-/merge_requests/2>.
+
+# Hook into ExtUtils::MakeMaker to create an import library on MSWin32 when gcc
+# is used.  FIXME: Ideally, this should be done in EU::MM itself.
+package # wrap to fool the CPAN indexer
+	ExtUtils::MM;
+use Config;
+sub static_lib {
+	my $base = shift->SUPER::static_lib(@_);
+
+	return $base unless $^O =~ /MSWin32/ && $Config{cc} =~ /\bgcc\b/i;
+
+	my $DLLTOOL = $Config{'dlltool'} || 'dlltool';
+
+	return <<"__EOM__"
+# This isn't actually a static lib, it just has the same name on Win32.
+\$(INST_DYNAMIC_LIB): \$(INST_DYNAMIC)
+	$DLLTOOL --def \$(EXPORT_LIST) --output-lib \$\@ --dllname \$(DLBASE).\$(DLEXT) \$(INST_DYNAMIC)
+
+dynamic:: \$(INST_DYNAMIC_LIB)
+__EOM__
+}
+	}
+
 	my $exit = eval { do $0 };
 	warn "Hack failed: (exit: $exit) $@" if $@ || $exit;
 
