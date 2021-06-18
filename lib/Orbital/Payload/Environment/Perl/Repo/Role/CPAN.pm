@@ -264,14 +264,17 @@ method uninstall() {
 		]);
 	};
 
-	$self->platform->build_perl->script(
-		qw(pm-uninstall -vfn),
+	try {
+		# TODO Check if dist is there?  If it is not, this will fail.
+		$self->platform->build_perl->script(
+			qw(pm-uninstall -vfn),
 
-		# TODO this happens to be the same syntax as cpanm
-		$self->_install_perl_deps_cpanm_dir_arg,
+			# TODO this happens to be the same syntax as cpanm
+			$self->_install_perl_deps_cpanm_dir_arg,
 
-		$self->dist_name,
-	);
+			$self->dist_name,
+		);
+	} catch {};
 }
 
 1;
