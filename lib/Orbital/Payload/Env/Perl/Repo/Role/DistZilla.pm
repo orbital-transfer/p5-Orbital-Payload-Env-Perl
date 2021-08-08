@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::Repo::Role::DistZilla;
+package Orbital::Payload::Env::Perl::Repo::Role::DistZilla;
 # ABSTRACT: A role for Dist::Zilla repos
 
 use Mu::Role;
@@ -164,10 +164,10 @@ method _dzil_has_plugin_test_podspelling() {
 method _install_dzil_spell_check_if_needed() {
 	return unless $^O eq 'linux';
 
-	require Orbital::Payload::System::RepoPackage::APT;
+	require Orbital::Payload::Sys::RepoPackage::APT;
 	if( $self->_dzil_has_plugin_test_podspelling ) {
 		my @packages = map {
-			Orbital::Payload::System::RepoPackage::APT->new( name => $_ )
+			Orbital::Payload::Sys::RepoPackage::APT->new( name => $_ )
 		} qw(aspell aspell-en);
 		$self->runner->system(
 			$self->platform->apt->install_packages_command( @packages )
@@ -195,8 +195,8 @@ method run_test() {
 }
 
 with qw(
-	Orbital::Payload::Environment::Perl::Repo::Role::CPAN
-	Orbital::Payload::Environment::Perl::Repo::Role::PerlEnvironment
+	Orbital::Payload::Env::Perl::Repo::Role::CPAN
+	Orbital::Payload::Env::Perl::Repo::Role::PerlEnvironment
 );
 
 1;

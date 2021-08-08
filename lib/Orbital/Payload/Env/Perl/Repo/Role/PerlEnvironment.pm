@@ -1,11 +1,11 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::Repo::Role::PerlEnvironment;
+package Orbital::Payload::Env::Perl::Repo::Role::PerlEnvironment;
 # ABSTRACT: A role for running the right environment for Perl
 
 use Mu::Role;
 
 use Orbital::Transfer::Common::Setup;
-use Orbital::Payload::System::System::Debian::Meson;
+use Orbital::Payload::Sys::System::Debian::Meson;
 use Orbital::Transfer::EnvironmentVariables;
 
 lazy environment => method() {
@@ -16,7 +16,7 @@ lazy environment => method() {
 
 	my @packages = @{ $self->debian_get_packages };
 	if( grep { $_ eq 'meson' } @packages ) {
-		my $meson = Orbital::Payload::System::System::Debian::Meson->new(
+		my $meson = Orbital::Payload::Sys::System::Debian::Meson->new(
 			runner => $self->runner,
 			platform => $self->platform,
 		);

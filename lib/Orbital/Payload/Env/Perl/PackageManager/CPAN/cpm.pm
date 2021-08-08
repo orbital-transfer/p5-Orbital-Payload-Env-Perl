@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::PackageManager::CPAN::cpm;
+package Orbital::Payload::Env::Perl::PackageManager::CPAN::cpm;
 # ABSTRACT: App::cpm package manager
 
 use Mu;

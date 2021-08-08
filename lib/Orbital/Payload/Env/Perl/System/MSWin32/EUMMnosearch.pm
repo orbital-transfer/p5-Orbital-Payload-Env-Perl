@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package Orbital::Payload::Environment::Perl::System::MSWin32::EUMMnosearch;
+package Orbital::Payload::Env::Perl::System::MSWin32::EUMMnosearch;
 # ABSTRACT: Hack ExtUtils::MakeMaker library searching on MSWin32
 
 package # hide from PAUSE

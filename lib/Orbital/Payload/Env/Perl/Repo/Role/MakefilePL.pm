@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::Repo::Role::MakefilePL;
+package Orbital::Payload::Env::Perl::Repo::Role::MakefilePL;
 # ABSTRACT: A role for Makefile.PL-base distributions
 
 use Mu::Role;
@@ -78,8 +78,8 @@ method run_test() {
 }
 
 with qw(
-	Orbital::Payload::Environment::Perl::Repo::Role::CPAN
-	Orbital::Payload::Environment::Perl::Repo::Role::PerlEnvironment
+	Orbital::Payload::Env::Perl::Repo::Role::CPAN
+	Orbital::Payload::Env::Perl::Repo::Role::PerlEnvironment
 );
 
 1;

@@ -1,12 +1,12 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::System::Role::Perl;
+package Orbital::Payload::Env::Perl::System::Role::Perl;
 # ABSTRACT: Role for Perls
 
 use Mu::Role;
 use Orbital::Transfer::Common::Setup;
 
 use File::Spec;
-use Orbital::Payload::Environment::Perl::Environment;
+use Orbital::Payload::Env::Perl::Environment;
 
 use Orbital::Transfer::EnvironmentVariables;
 use Object::Util magic => 0;
@@ -31,7 +31,7 @@ method _get_perl_with_base_directory( $directory ) {
 			File::Spec->catfile( $directory, $_ )
 		} @{ Orbital::Launch::BIN_DIRS() }
 	]);
-	Orbital::Payload::Environment::Perl::Environment->new(
+	Orbital::Payload::Env::Perl::Environment->new(
 		perl => $self->perl_path,
 		runner => $self->runner,
 		parent_environment => $env,

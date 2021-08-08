@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::Environment;
+package Orbital::Payload::Env::Perl::Environment;
 # ABSTRACT: Perl interpreter
 
 use Mu;

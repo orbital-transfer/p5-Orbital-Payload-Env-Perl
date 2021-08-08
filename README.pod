@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Orbital::Payload::Environment::Perl - Tools for Perl development
+Orbital::Payload::Env::Perl - Tools for Perl development
 
 =head1 VERSION
 

@@ -1,5 +1,5 @@
 use Modern::Perl;
-package Orbital::Payload::Environment::Perl::Repo::Role::CpanfileGit;
+package Orbital::Payload::Env::Perl::Repo::Role::CpanfileGit;
 # ABSTRACT: Role for cpanfile Git datai
 
 use Mu::Role;

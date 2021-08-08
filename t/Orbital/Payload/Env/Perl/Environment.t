@@ -3,11 +3,11 @@
 use Test::Most tests => 1;
 
 use lib 't/lib';
-use Orbital::Payload::Environment::Perl::Environment;
+use Orbital::Payload::Env::Perl::Environment;
 use Orbital::Transfer::Runner::Default;
 
 subtest "Test Perl environment" => sub {
-	my $env = Orbital::Payload::Environment::Perl::Environment->new(
+	my $env = Orbital::Payload::Env::Perl::Environment->new(
 		perl => $^X,
 		runner => Orbital::Transfer::Runner::Default->new,
 	);

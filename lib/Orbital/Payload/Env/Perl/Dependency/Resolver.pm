@@ -1,4 +1,4 @@
-package Orbital::Payload::Environment::Perl::Dependency::Resolver;
+package Orbital::Payload::Env::Perl::Dependency::Resolver;
 # ABSTRACT: Resolves Perl dependencies
 
 use Moo;
