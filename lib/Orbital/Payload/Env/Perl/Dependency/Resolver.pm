@@ -2,7 +2,7 @@ package Orbital::Payload::Env::Perl::Dependency::Resolver;
 # ABSTRACT: Resolves Perl dependencies
 
 use Moo;
-use CPAN::FindDependencies;
+use Module::Load;
 use CPAN::Meta;
 use Module::CPANfile;
 
@@ -39,6 +39,7 @@ sub resolve_cpanfile {
 
 sub resolve_cpan {
 	my ($self, $cpan_module)= @_;
+	load 'CPAN::FindDependencies';
 	my @dependencies = CPAN::FindDependencies::finddeps($cpan_module);
 }
 
