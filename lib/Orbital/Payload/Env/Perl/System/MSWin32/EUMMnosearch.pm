@@ -73,6 +73,12 @@ if( $0 eq "Makefile.PL" || $0 eq "./Makefile.PL"  ) {
 				$args{LIBS} =~ s,^(.*)$,:nosearch $1 :search,;
 				$args{LIBS} =~ s/-lexecinfo//g;
 			}
+
+			# Special case for PDL
+			# PDL::IO::Browser: libcurses / libncurses
+			if( $args{NAME} eq 'PDL::IO::Browser' ) {
+				$args{LIBS} =~ s,^(.*)$,:nosearch $1 :search,;
+			}
 			print "LIBS: $args{LIBS}\n";
 			$wm->(%args);
 		};
