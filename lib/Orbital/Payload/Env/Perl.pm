@@ -2,8 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl;
 # ABSTRACT: Tools for Perl development
 
-use strict;
-use warnings;
+use Orbital::Transfer::Common::Setup;
 
 classmethod apply_roles_to_repo( $repo ) {
 	if( $repo->directory->child('dist.ini')->is_file ) {

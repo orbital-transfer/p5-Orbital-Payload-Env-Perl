@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::CpanfileGit;
 # ABSTRACT: Role for cpanfile Git datai
 
+use Orbital::Transfer::Common::Setup;
 use Mu::Role;
 
 use File::Spec;

@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::MakefilePL;
 # ABSTRACT: A role for Makefile.PL-base distributions
 
+use Orbital::Transfer::Common::Setup;
 use Mu::Role;
 
 use YAML;

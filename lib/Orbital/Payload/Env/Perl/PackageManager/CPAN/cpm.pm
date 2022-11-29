@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::PackageManager::CPAN::cpm;
 # ABSTRACT: App::cpm package manager
 
+use Orbital::Transfer::Common::Setup;
 use Mu;
 
 has perl_environment => (

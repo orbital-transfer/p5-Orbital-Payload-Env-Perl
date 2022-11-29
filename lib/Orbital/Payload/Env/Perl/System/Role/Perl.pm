@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::System::Role::Perl;
 # ABSTRACT: Role for Perls
 
+use Orbital::Transfer::Common::Setup;
 use Mu::Role;
 
 use File::Spec;

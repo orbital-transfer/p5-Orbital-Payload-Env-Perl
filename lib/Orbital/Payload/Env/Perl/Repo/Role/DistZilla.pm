@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::DistZilla;
 # ABSTRACT: A role for Dist::Zilla repos
 
+use Orbital::Transfer::Common::Setup;
 use Mu::Role;
 
 use File::Which;

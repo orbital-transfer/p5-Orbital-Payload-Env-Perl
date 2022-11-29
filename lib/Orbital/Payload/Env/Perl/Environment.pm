@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Environment;
 # ABSTRACT: Perl interpreter
 
+use Orbital::Transfer::Common::Setup;
 use Mu;
 use Orbital::Transfer::Common::Types qw(AbsFile ArrayRef Path);
 use aliased 'Orbital::Transfer::Runnable';

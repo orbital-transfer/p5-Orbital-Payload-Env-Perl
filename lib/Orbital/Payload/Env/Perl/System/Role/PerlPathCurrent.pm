@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::System::Role::PerlPathCurrent;
 # ABSTRACT: Role to use current running Perl as Perl path
 
+use Orbital::Transfer::Common::Setup;
 use Mu::Role;
 use Config;
 

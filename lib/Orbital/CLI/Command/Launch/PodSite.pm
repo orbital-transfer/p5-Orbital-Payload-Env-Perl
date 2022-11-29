@@ -2,6 +2,7 @@ use Orbital::Transfer::Common::Setup;
 package Orbital::CLI::Command::Launch::PodSite;
 # ABSTRACT: Build Pod::Site from repos
 
+use Orbital::Transfer::Common::Setup;
 use Mu;
 use CLI::Osprey;
 
