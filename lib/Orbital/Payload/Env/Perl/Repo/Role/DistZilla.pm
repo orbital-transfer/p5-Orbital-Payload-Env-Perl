@@ -34,13 +34,13 @@ method _run_dzil(@args) {
 }
 
 method _install_dzil() {
-	try {
+	try_tt {
 		$self->runner->system(
 			$self->platform->author_perl->command(
 				qw(-MDist::Zilla -e1),
 			)
 		);
-	} catch {
+	} catch_tt {
 		$self->install_perl_build(dists => [ qw(Net::SSLeay Dist::Zilla) ]);
 	};
 }
@@ -48,21 +48,21 @@ method _install_dzil() {
 method _get_dzil_authordeps() {
 	local $CWD = $self->directory;
 
-	my ($dzil_authordeps, $dzil_authordeps_stderr, $dzil_authordeps_exit) = try {
+	my ($dzil_authordeps, $dzil_authordeps_stderr, $dzil_authordeps_exit) = try_tt {
 		$self->runner->capture(
 			$self->_dzil_command(
 				qw(authordeps)
 				# --missing
 			)
 		);
-	} catch {};
+	} catch_tt {};
 
 	my $reader = my $other_reader = Module::Reader->new( inc => [
 		'.',
 		@{ $self->platform->author_perl->library_paths }
 	]);
 	my @dzil_authordeps =
-		grep { ! ( try { $reader->module($_) } catch { 0 } ) }
+		grep { ! ( try_tt { $reader->module($_) } catch_tt { 0 } ) }
 		split /\n/, $dzil_authordeps;
 }
 
@@ -125,7 +125,7 @@ lazy dzil_build_dir => method() {
 method _dzil_build_in_dir() {
 	local $CWD = $self->directory;
 
-	say STDERR "Building dzil for @{[ $self->directory ]}";
+	print STDERR "Building dzil for @{[ $self->directory ]}\n";
 	$self->_run_dzil(
 		qw(build --in), $self->dzil_build_dir
 	);

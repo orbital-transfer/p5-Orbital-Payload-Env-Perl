@@ -13,9 +13,9 @@ lazy dist_name => method() {
 	my $meta_yml_path = $self->directory->child('MYMETA.yml');
 
 	if ( ! $meta_yml_path->is_file ){
-		try {
+		try_tt {
 			$self->_run_makefile_pl;
-		} catch {};
+		} catch_tt {};
 	}
 
 	if( $meta_yml_path->is_file ) {
@@ -43,11 +43,11 @@ method _run_makefile_pl() {
 method setup_build() {
 	# build-time dependency
 	$self->install_perl_deps(qw(ExtUtils::MakeMaker));
-	try {
+	try_tt {
 		$self->_run_makefile_pl;
 		die "Makefile.PL failed" unless $self->directory->child('MYMETA.yml')->is_file;
-	} catch {
-		try {
+	} catch_tt {
+		try_tt {
 			# Configure failed, try installing deps first from CPAN?
 			#
 			# An even more complicated way of doing things is to
@@ -64,7 +64,7 @@ method setup_build() {
 					$self->dist_name,
 				],
 			);
-		} catch {};
+		} catch_tt {};
 	};
 }
 

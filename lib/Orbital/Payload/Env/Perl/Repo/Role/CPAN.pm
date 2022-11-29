@@ -25,14 +25,14 @@ method _install_perl_deps_cpanm_dir_arg() {
 
 method install_perl_build( :$dists = [], :$verbose = 0 ) {
 	my $global = $self->config->cpan_global_install;
-	try {
+	try_tt {
 	$self->platform->author_perl->script('cpm',
 			qw(install),
 			@{ $verbose ? [ qw(-v) ] : [] },
 			@{ $global ? [ qw(-g) ] : [ qw(-L), $self->config->build_tools_dir ] },
 			@$dists
 	);
-	} catch { };
+	} catch_tt { };
 	$self->cpanm( perl => $self->platform->author_perl, arguments => [
 		qw(-qn),
 		@{ $verbose ? [ qw(-v) ] : [] },
@@ -43,7 +43,7 @@ method install_perl_build( :$dists = [], :$verbose = 0 ) {
 
 method install_perl_deps( @dists ) {
 	my $global = $self->config->cpan_global_install;
-	try {
+	try_tt {
 	$self->platform->build_perl->script(
 		qw(cpm install),
 		@{ $global ? [ qw(-g) ] : [ qw(-L), $self->config->lib_dir ] },
@@ -55,7 +55,7 @@ method install_perl_deps( @dists ) {
 		$self->_install_perl_deps_cpanm_dir_arg,
 		@dists
 	]);
-	} catch { };
+	} catch_tt { };
 
 	# Ignore modules that are installed already without checking CPAN for
 	# version: `--skip-satisfied` .
@@ -114,7 +114,7 @@ lazy cpanm_latest_build_log => method() {
 };
 
 method cpm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
-	try {
+	try_tt {
 		if( $arguments->[0] eq 'install'
 			&& $self->cpm_home_dir ne $self->_default_cpm_home_dir ) {
 			shift @$arguments;
@@ -123,16 +123,16 @@ method cpm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 		my $command = $perl->script_command( qw(cpm), @$arguments );
 		$command_cb->( $command );
 		$self->runner->system( $command );
-	} catch {
-		say STDERR "cpm failed. Dumping build.log.\n";
-		say STDERR path( $self->cpm_latest_build_log )->slurp_utf8;
-		say STDERR "End of build.log.\n";
+	} catch_tt {
+		print STDERR "cpm failed. Dumping build.log.\n\n";
+		print STDERR path( $self->cpm_latest_build_log )->slurp_utf8, "\n";
+		print STDERR "End of build.log.\n\n";
 		die $_;
 	};
 }
 
 method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
-	try {
+	try_tt {
 		my $command = $perl->script_command( qw(cpanm), @$arguments );
 		$command_cb->( $command );
 		if( $self->cpanm_home_dir ne $self->_default_cpanm_home_dir ) {
@@ -141,18 +141,18 @@ method cpanm( :$perl, :$command_cb = sub {}, :$arguments = [] ) {
 			);
 		}
 		$self->runner->system( $command );
-	} catch {
-		say STDERR "cpanm failed. Dumping build.log.\n";
-		say STDERR path( $self->cpanm_latest_build_log )->slurp_utf8;
-		say STDERR "End of build.log.\n";
+	} catch_tt {
+		print STDERR "cpanm failed. Dumping build.log.\n\n";
+		print STDERR path( $self->cpanm_latest_build_log )->slurp_utf8, "\n";
+		print STDERR "End of build.log.\n\n";
 		die $_;
 	};
 }
 
 method _install( $directory, :$quiet = 0, :$installdeps = 0 ) {
-	try {
+	try_tt {
 		$self->_install_cpm( $directory, quiet => $quiet, installdeps => $installdeps );
-	} catch {};
+	} catch_tt {};
 	$self->_install_cpanm( $directory, quiet => $quiet, installdeps => $installdeps );
 }
 
@@ -251,9 +251,9 @@ method _run_test( $directory ) {
 }
 
 method uninstall() {
-	try {
+	try_tt {
 		$self->platform->build_perl->which_script( 'pm-uninstall' )
-	} catch {
+	} catch_tt {
 		$self->cpanm( perl => $self->platform->build_perl, arguments => [
 			qw(--no-man-pages),
 			$self->_install_perl_deps_cpanm_dir_arg,
@@ -262,7 +262,7 @@ method uninstall() {
 		]);
 	};
 
-	try {
+	try_tt {
 		# TODO Check if dist is there?  If it is not, this will fail.
 		$self->platform->build_perl->script(
 			qw(pm-uninstall -vfn),
@@ -272,7 +272,7 @@ method uninstall() {
 
 			$self->dist_name,
 		);
-	} catch {};
+	} catch_tt {};
 }
 
 1;
