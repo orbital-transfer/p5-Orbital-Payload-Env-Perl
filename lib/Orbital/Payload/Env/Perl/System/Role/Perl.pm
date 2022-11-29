@@ -1,9 +1,8 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::System::Role::Perl;
 # ABSTRACT: Role for Perls
 
 use Mu::Role;
-use Orbital::Transfer::Common::Setup;
 
 use File::Spec;
 use Orbital::Payload::Env::Perl::Environment;

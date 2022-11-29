@@ -1,10 +1,9 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::MakefilePL;
 # ABSTRACT: A role for Makefile.PL-base distributions
 
 use Mu::Role;
 
-use Orbital::Transfer::Common::Setup;
 use YAML;
 use File::chdir;
 use List::AllUtils qw(first);

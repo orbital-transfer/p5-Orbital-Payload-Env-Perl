@@ -1,4 +1,4 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::DistZilla;
 # ABSTRACT: A role for Dist::Zilla repos
 
@@ -11,8 +11,6 @@ use File::chdir;
 use Module::Reader;
 use List::AllUtils qw(first);
 use Sub::Retry;
-
-use Orbital::Transfer::Common::Setup;
 
 method _dzil_command( @args ) {
 	my $command = $self->platform->author_perl->script_command(

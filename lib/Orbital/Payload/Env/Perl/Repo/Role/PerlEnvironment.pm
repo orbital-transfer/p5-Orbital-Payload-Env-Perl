@@ -1,10 +1,9 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::PerlEnvironment;
 # ABSTRACT: A role for running the right environment for Perl
 
 use Mu::Role;
 
-use Orbital::Transfer::Common::Setup;
 use Orbital::Payload::Sys::System::Debian::Meson;
 use Orbital::Transfer::EnvironmentVariables;
 

@@ -1,10 +1,8 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::CpanfileGit;
 # ABSTRACT: Role for cpanfile Git datai
 
 use Mu::Role;
-
-use Orbital::Transfer::Common::Setup;
 
 use File::Spec;
 use Module::CPANfile;

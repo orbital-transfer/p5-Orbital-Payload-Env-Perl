@@ -1,10 +1,9 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::System::Role::PerlPathCurrent;
 # ABSTRACT: Role to use current running Perl as Perl path
 
 use Mu::Role;
 use Config;
-use Orbital::Transfer::Common::Setup;
 
 lazy 'perl_path' => method() {
 	# See documentation at

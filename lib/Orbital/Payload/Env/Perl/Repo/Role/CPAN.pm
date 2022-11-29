@@ -1,4 +1,4 @@
-use Modern::Perl;
+use Orbital::Transfer::Common::Setup;
 package Orbital::Payload::Env::Perl::Repo::Role::CPAN;
 # ABSTRACT: A role for running CPAN clients
 
@@ -8,8 +8,6 @@ use Module::Load;
 use File::chdir;
 use File::HomeDir;
 use Path::Tiny;
-
-use Orbital::Transfer::Common::Setup;
 
 requires 'dist_name';
 
