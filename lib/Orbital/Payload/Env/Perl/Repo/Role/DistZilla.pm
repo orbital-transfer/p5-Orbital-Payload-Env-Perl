@@ -163,10 +163,10 @@ method _dzil_has_plugin_test_podspelling() {
 method _install_dzil_spell_check_if_needed() {
 	return unless $^O eq 'linux';
 
-	require Orbital::Payload::Sys::RepoPackage::APT;
+	require Orbital::Payload::Sys::Package::Spec::APT;
 	if( $self->_dzil_has_plugin_test_podspelling ) {
 		my @packages = map {
-			Orbital::Payload::Sys::RepoPackage::APT->new( name => $_ )
+			Orbital::Payload::Sys::Package::Spec::APT->new( name => $_ )
 		} qw(aspell aspell-en);
 		$self->runner->system(
 			$self->platform->apt->install_packages_command( @packages )
