@@ -4,10 +4,13 @@ package Orbital::Payload::Env::Perl;
 
 use Orbital::Transfer::Common::Setup;
 
+use aliased 'Orbital::Payload::Env::Perl::Condition::Project::HasDzilConfig';
+use aliased 'Orbital::Payload::Env::Perl::Condition::Project::HasMakefilePL';
+
 classmethod apply_roles_to_repo( $repo ) {
-	if( $repo->directory->child('dist.ini')->is_file ) {
+	if( HasDzilConfig->predicate($repo) ) {
 		Moo::Role->apply_roles_to_object( $repo, 'Orbital::Payload::Env::Perl::Repo::Role::DistZilla');
-	} elsif( $repo->directory->child('Makefile.PL')->is_file ) {
+	} elsif( HasMakefilePL->predicate($repo) ) {
 		Moo::Role->apply_roles_to_object( $repo, 'Orbital::Payload::Env::Perl::Repo::Role::MakefilePL');
 	}
 	# TODO Build.PL
