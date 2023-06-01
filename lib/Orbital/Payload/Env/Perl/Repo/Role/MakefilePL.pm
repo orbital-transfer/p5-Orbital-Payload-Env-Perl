@@ -7,7 +7,7 @@ use Mu::Role;
 
 use YAML;
 use File::chdir;
-use List::AllUtils qw(first);
+use List::Util::MaybeXS qw(first);
 
 lazy dist_name => method() {
 	my $makefile_pl_path = $self->directory->child('Makefile.PL');

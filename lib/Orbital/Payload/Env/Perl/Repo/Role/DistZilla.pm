@@ -10,7 +10,7 @@ use Module::Load;
 use File::Temp qw(tempdir);
 use File::chdir;
 use Module::Reader;
-use List::AllUtils qw(first);
+use List::Util::MaybeXS qw(first);
 use Sub::Retry;
 
 method _dzil_command( @args ) {
